@@ -1,4 +1,4 @@
-﻿using JDownloader.Model;
+using JDownloader.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -81,6 +81,9 @@ namespace JDownloader.Namespace
 
         public Task RenamePackage(long packageId, string newName) =>
             PostRequestAsync(ApiConstants.LinkGrabberV2.RenamePackage, new object[] { packageId, newName });
+
+        public Task SetComment(long[] linkIds, long[] packageIds, bool setPackageChildren, string comment) =>
+            PostRequestAsync(ApiConstants.DownloadsV2.SetComment, new object[] { linkIds, packageIds, setPackageChildren, comment });
 
         public Task SetDownloadDirectory(long[] packageIds, string downloadPath) =>
             PostRequestAsync(ApiConstants.LinkGrabberV2.SetDownloadDirectory, new object[] { downloadPath, packageIds });
