@@ -1,4 +1,4 @@
-﻿namespace JDownloader
+namespace JDownloader
 {
     public static class ApiConstants
     {
@@ -108,6 +108,7 @@
             public const string RenamePackage = "renamePackage";
             public const string ResetLinks = "resetLinks";
             public const string ResumeLinks = "resumeLinks";
+            public const string SetComment = "setComment";
             public const string SetDownloadDirectory = "setDownloadDirectory";
             public const string SetDownloadPassword = "setDownloadPassword";
             public const string SetEnabled = "setEnabled";
@@ -198,6 +199,7 @@
             public const string RemoveLinks = "removeLinks";
             public const string RenameLink = "renameLink";
             public const string RenamePackage = "renamePackage";
+            public const string SetComment = "setComment";
             public const string SetDownloadDirectory = "setDownloadDirectory";
             public const string SetDownloadPassword = "setDownloadPassword";
             public const string SetEnabled = "setEnabled";

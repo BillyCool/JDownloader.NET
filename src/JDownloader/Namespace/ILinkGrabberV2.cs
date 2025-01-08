@@ -1,4 +1,4 @@
-﻿using JDownloader.Model;
+using JDownloader.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -172,6 +172,15 @@ namespace JDownloader.Namespace
         /// <param name="packageId">The ID of the package to rename.</param>
         /// <param name="newName">The new name for the package.</param>
         Task RenamePackage(long packageId, string newName);
+
+        /// <summary>
+        /// Sets the comment for the specified links and packages.
+        /// </summary>
+        /// <param name="linkIds">The IDs of the links to set comment for.</param>
+        /// <param name="packageIds">The IDs of the packages to set comment for.</param>
+        /// <param name="setPackageChildren">Set comment for all children in package.</param>
+        /// <param name="comment">String to use for comment.</param>
+        Task SetComment(long[] linkIds, long[] packageIds, bool setPackageChildren, string comment);
 
         /// <summary>
         /// Sets the download directory for specified packages.
