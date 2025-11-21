@@ -6,8 +6,8 @@ public static class Program
 {
     private const string AppKey = "MySampleApp123";
     private const string DeviceName = "JDownloader@BillyCool";
-    private const string Email = "myjd@email.com";
-    private const string Password = "myjdpassword";
+    private const string Email = "billycool@pm.me";
+    private const string Password = "5@siee@gE4#3u8o!4HE%X94pLQmyNh@j";
 
     public static async Task Main(string[] _)
     {
