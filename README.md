@@ -7,7 +7,7 @@
 
 JDownloader.NET is a library that provides an interface to interact with the official JDownloader API. It has been written entirely from scratch, following the official JDownloader API documentation and Java source code.
 
-The library targets .NET Standard 2.0 and .NET9.
+The library targets .NET Standard 2.0 and .NET 10.
 
 ## Features
 
