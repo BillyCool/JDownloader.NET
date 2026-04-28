@@ -13,13 +13,13 @@ namespace JDownloader.Converters
             {
                 if (reader.TokenType == JsonTokenType.String)
                 {
-                    var stringValue = reader.GetString();
+                    string stringValue = reader.GetString();
                     return new LinkVariantDetailOrString(stringValue);
                 }
 
                 if (reader.TokenType == JsonTokenType.StartObject)
                 {
-                    var jsoNValue = JsonSerializer.Deserialize<LinkVariantDetail>(ref reader, options);
+                    LinkVariantDetail jsoNValue = JsonSerializer.Deserialize<LinkVariantDetail>(ref reader, options);
                     return new LinkVariantDetailOrString(jsoNValue);
                 }
 

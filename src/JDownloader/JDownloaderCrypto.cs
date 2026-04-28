@@ -16,7 +16,10 @@ namespace JDownloader
             // Ensure email is lowercase
             byte[] bytes = Encoding.UTF8.GetBytes(email.ToLower() + password + domain);
 
-            return SHA256.Create().ComputeHash(bytes);
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                return sha256.ComputeHash(bytes);
+            }
         }
 
         internal static byte[] GetEncryptionToken(byte[] secret, string sessionToken)
@@ -26,7 +29,10 @@ namespace JDownloader
                  .Select(x => Convert.ToByte(sessionToken.Substring(x, 2), 16))
                  .ToArray();
 
-            return SHA256.Create().ComputeHash(secret.Concat(sessionTokenBytes).ToArray());
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                return sha256.ComputeHash(secret.Concat(sessionTokenBytes).ToArray());
+            }
         }
 
         #endregion Secret keys and encryption tokens
@@ -36,52 +42,60 @@ namespace JDownloader
         internal static string GetSignature(string data, byte[] key)
         {
             // HMAC the data
-            HMACSHA256 hmacsha256 = new HMACSHA256(key);
-            hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(data));
+            using (HMACSHA256 hmacsha256 = new HMACSHA256(key))
+            {
+                byte[] hash = hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(data));
 
-            // Hex format the result
-            return BitConverter.ToString(hmacsha256.Hash).Replace("-", string.Empty).ToLower();
+                // Hex format the result
+                return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
+            }
         }
 
         internal static async Task<string> Encrypt(string data, byte[] key)
         {
             // AES 128 CBC
-            Aes aes = Aes.Create();
-            aes.BlockSize = 128;
-            aes.Mode = CipherMode.CBC;
-            aes.IV = key.Take(key.Length / 2).ToArray(); // First half
-            aes.Key = key.Skip(key.Length / 2).ToArray(); // Second half
-
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (Aes aes = Aes.Create())
             {
-                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
-                using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
+                aes.BlockSize = 128;
+                aes.Mode = CipherMode.CBC;
+                aes.IV = key.Take(key.Length / 2).ToArray(); // First half
+                aes.Key = key.Skip(key.Length / 2).ToArray(); // Second half
+
+                using (ICryptoTransform encryptor = aes.CreateEncryptor())
+                using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    await streamWriter.WriteAsync(data);
+                    using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                    using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
+                    {
+                        await streamWriter.WriteAsync(data);
+                    }
+
+                    byte[] encryptedBytes = memoryStream.ToArray();
+
+                    return Convert.ToBase64String(encryptedBytes);
                 }
-
-                byte[] encryptedBytes = memoryStream.ToArray();
-
-                return Convert.ToBase64String(encryptedBytes);
             }
         }
 
         internal static async Task<string> Decrypt(string data, byte[] key)
         {
             // AES 128 CBC
-            Aes aes = Aes.Create();
-            aes.BlockSize = 128;
-            aes.Mode = CipherMode.CBC;
-            aes.IV = key.Take(key.Length / 2).ToArray(); // First half
-            aes.Key = key.Skip(key.Length / 2).ToArray(); // Second half
-
             byte[] base64DecryptedBytes = Convert.FromBase64String(data);
 
-            using (MemoryStream memoryStream = new MemoryStream(base64DecryptedBytes))
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
-            using (StreamReader streamReader = new StreamReader(cryptoStream))
+            using (Aes aes = Aes.Create())
             {
-                return await streamReader.ReadToEndAsync();
+                aes.BlockSize = 128;
+                aes.Mode = CipherMode.CBC;
+                aes.IV = key.Take(key.Length / 2).ToArray(); // First half
+                aes.Key = key.Skip(key.Length / 2).ToArray(); // Second half
+
+                using (ICryptoTransform decryptor = aes.CreateDecryptor())
+                using (MemoryStream memoryStream = new MemoryStream(base64DecryptedBytes))
+                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                using (StreamReader streamReader = new StreamReader(cryptoStream))
+                {
+                    return await streamReader.ReadToEndAsync();
+                }
             }
         }
 

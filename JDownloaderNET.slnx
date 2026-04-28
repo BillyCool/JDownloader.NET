@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/JDownloader/JDownloader.csproj" />
+  <Project Path="src/JDownloader.Example/JDownloader.Example.csproj" />
+  <Project Path="tests/JDownloader.Tests/JDownloader.Tests.csproj" />
+</Solution>

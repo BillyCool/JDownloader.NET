@@ -1,6 +1,5 @@
-﻿using JDownloader.Model;
+using JDownloader.Model;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace JDownloader.Namespace
@@ -9,15 +8,13 @@ namespace JDownloader.Namespace
     {
         protected readonly JDownloaderClient _jDownloaderClient;
 
-        protected static JsonSerializerOptions JsonSerializerOptions;
+        protected JsonSerializerOptions JsonSerializerOptions => _jDownloaderClient.SerializerOptions;
 
         public virtual string Endpoint { get; }
 
         protected BaseNamespace(JDownloaderClient jDownloaderClient)
         {
             _jDownloaderClient = jDownloaderClient;
-            JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-            JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         }
 
         protected Task PostRequestAsync(string action, object param = null, bool doubleJsonEncode = false, bool skipDeserialization = false)

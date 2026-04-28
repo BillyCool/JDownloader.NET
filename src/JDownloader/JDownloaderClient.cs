@@ -11,7 +11,7 @@ using System.Web;
 
 namespace JDownloader
 {
-    public class JDownloaderClient : IJDownloaderClient
+    public class JDownloaderClient : IJDownloaderClient, IDisposable
     {
         private readonly JDownloaderClientOptions _jDownloaderClientOptions;
 
@@ -21,23 +21,33 @@ namespace JDownloader
 
         private readonly HttpClient _httpClient;
 
+        private readonly bool _ownsHttpClient;
+
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
+        private bool _disposed;
+
         public JDownloaderClient(JDownloaderClientOptions jDownloaderClientOptions)
+            : this(jDownloaderClientOptions, CreateHttpClient(), ownsHttpClient: true)
         {
-            jDownloaderClientOptions.Validate();
-            _jDownloaderClientOptions = jDownloaderClientOptions;
+        }
+
+        public JDownloaderClient(JDownloaderClientOptions jDownloaderClientOptions, HttpClient httpClient)
+            : this(jDownloaderClientOptions, httpClient, ownsHttpClient: false)
+        {
+        }
+
+        private JDownloaderClient(JDownloaderClientOptions jDownloaderClientOptions, HttpClient httpClient, bool ownsHttpClient)
+        {
+            _jDownloaderClientOptions = jDownloaderClientOptions ?? throw new ArgumentNullException(nameof(jDownloaderClientOptions));
+            _jDownloaderClientOptions.Validate();
 
             _sessionInfo = new SessionInfo();
             _deviceInfo = new DeviceInfo();
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(ApiConstants.SERVER_ROOT),
-                Timeout = TimeSpan.FromSeconds(120)
-            };
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _ownsHttpClient = ownsHttpClient;
 
-            _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-            _jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            _jsonSerializerOptions = CreateJsonSerializerOptions();
 
             #region Namespaces
 
@@ -127,6 +137,8 @@ namespace JDownloader
         public bool IsConnected => !string.IsNullOrEmpty(_sessionInfo.SessionToken);
 
         public bool IsDeviceSelected => !string.IsNullOrEmpty(_deviceInfo.DeviceId);
+
+        internal JsonSerializerOptions SerializerOptions => _jsonSerializerOptions;
 
         public async Task Connect(string email, string password)
         {
@@ -225,7 +237,7 @@ namespace JDownloader
             // Send request
             try
             {
-                using (HttpResponseMessage response = await _httpClient.GetAsync(action))
+                using (HttpResponseMessage response = await _httpClient.GetAsync(GetServerUrl(action)))
                 {
                     string result = await response.Content.ReadAsStringAsync();
 
@@ -245,9 +257,13 @@ namespace JDownloader
                     }
                 }
             }
+            catch (MyJDownloaderException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new MyJDownloaderException(ex.Message);
+                throw new MyJDownloaderException(ex.Message, ex);
             }
         }
 
@@ -285,7 +301,7 @@ namespace JDownloader
 
             try
             {
-                StringContent content = new StringContent(encryptedJson, Encoding.UTF8, "application/aesjson-jd");
+                using (StringContent content = new StringContent(encryptedJson, Encoding.UTF8, "application/aesjson-jd"))
                 using (HttpResponseMessage response = await _httpClient.PostAsync(GetFormattedPostUrl(baseUrl, arg.Action), content))
                 {
                     string decryptedResult = await GetDecryptedResponseBody(response);
@@ -315,9 +331,13 @@ namespace JDownloader
                     }
                 }
             }
+            catch (MyJDownloaderException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new MyJDownloaderException(ex.Message);
+                throw new MyJDownloaderException(ex.Message, ex);
             }
         }
 
@@ -327,7 +347,22 @@ namespace JDownloader
             if (!IsDeviceSelected) throw new DeviceNotSelectedException();
         }
 
+        private static HttpClient CreateHttpClient() => new HttpClient
+        {
+            Timeout = TimeSpan.FromSeconds(120)
+        };
+
+        private static JsonSerializerOptions CreateJsonSerializerOptions()
+        {
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+            jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+            return jsonSerializerOptions;
+        }
+
         private string GetFormattedPostUrl(string baseUrl, string action) => $"{baseUrl}/t_{HttpUtility.UrlEncode(_sessionInfo.SessionToken)}_{HttpUtility.UrlEncode(_deviceInfo.DeviceId)}{action}";
+
+        private static string GetServerUrl(string action) => ApiConstants.SERVER_ROOT + action;
 
         private static long GetUniqueRequestId() => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
@@ -352,6 +387,27 @@ namespace JDownloader
             {
                 return result;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing && _ownsHttpClient)
+            {
+                _httpClient.Dispose();
+            }
+
+            _disposed = true;
         }
 
         #endregion Request helpers

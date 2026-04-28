@@ -5,7 +5,7 @@
 
 ## About
 
-JDownloader.NET is a library that provides an interface to interact with the official JDownloader API. It has been written entirely from scratch, following the official JDownloader API documentation and Java source code.
+JDownloader.NET is a library that provides an interface to interact with the official JDownloader API. It is built from the official JDownloader API documentation and Java source code.
 
 The library targets .NET Standard 2.0 and .NET 10.
 
@@ -50,25 +50,27 @@ Before using the library, you will need to register for a [MyJDownloader](https:
 
 1. Register for a [MyJDownloader](https://my.jdownloader.org/) account if you don't already have one.
 1. In JDownloader, navigate to `Settings > MyJDownloader > Setup & Login`.
-1. Enter you email, password, set a device name and click `Connect`.
+1. Enter your email, password, set a device name, and click `Connect`.
 1. Verify that the `Connection established. Great!` message appears.
 
 #### Library Setup
 
 All JDownloader.NET functionality is exposed through the `JDownloaderClient` class.
 
-Start by create an instance of this class by passing a `JDownloaderClientOptions` instance and a unique application key:
+Start by creating an instance of this class by passing a `JDownloaderClientOptions` instance and a unique application key:
 
 ```csharp
 using JDownloader;
 using JDownloader.Model;
 
 // Setup the client
-JDownloaderClient jDownloaderClient = new(new JDownloaderClientOptions
+using JDownloaderClient jDownloaderClient = new(new JDownloaderClientOptions
 {
     AppKey = "MyAppKey"
 });
 ```
+
+If you need custom HTTP handling, you can also pass your own `HttpClient` instance into the constructor. The default constructor manages its own client and can be disposed when you're done.
 
 Next you need to connect to your MyJDownloader account:
 
@@ -92,13 +94,13 @@ if (targetDevice != null)
 }
 ```
 
-You are now connected to your JDownloader running on your computer. Before you start using the available APIs, you may optionally setup a direct connection to the device, instead of going through the MyJDownloader servers:
+You are now connected to your JDownloader running on your computer. Before you start using the available APIs, you may optionally set up a direct connection to the device instead of going through the MyJDownloader servers:
 
 ```csharp
 // Get a list of direct connections
 DirectConnectionInfos directConnectionInfo = await jDownloaderClient.Device.GetDirectConnectionInfos();
 
-// If any direction connections exist, connect to the first one
+// If any direct connections exist, connect to the first one
 if (directConnectionInfo.Infos.Count > 0)
 {
     jDownloaderClient.SetDirectConnectionInfo(directConnectionInfo.Infos[0]);
@@ -115,4 +117,18 @@ Once you're done, you may disconnect the session:
 
 ```csharp
 await jDownloaderClient.Disconnect();
+```
+
+## Development
+
+Build the solution with:
+
+```powershell
+dotnet build .\JDownloaderNET.slnx
+```
+
+Run the tests with:
+
+```powershell
+dotnet test .\JDownloaderNET.slnx
 ```
