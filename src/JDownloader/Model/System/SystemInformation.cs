@@ -8,6 +8,10 @@
 
         public string ArchString { get; set; }
 
+        public bool Docker { get; set; }
+
+        public string Hardware { get; set; }
+
         public long HeapCommitted { get; set; } = -1;
 
         public long HeapMax { get; set; } = -1;
@@ -33,6 +37,8 @@
         public string OsFamily { get; set; }
 
         public string OsString { get; set; }
+
+        public bool Snap { get; set; }
 
         public long StartupTimeStamp { get; set; } = -1;
     }

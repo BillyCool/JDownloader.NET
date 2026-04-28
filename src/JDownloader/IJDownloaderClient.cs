@@ -66,6 +66,8 @@ namespace JDownloader
 
         IConfig Config { get; set; }
 
+        IContentV2 ContentV2 { get; set; }
+
         IDevice Device { get; set; }
 
         IDialogs Dialogs { get; set; }

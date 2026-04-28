@@ -26,7 +26,7 @@ namespace JDownloader.Namespace
             await PostRequestAsync(ApiConstants.AccountsV2.RefreshAccounts, new object[] { accountIds, forceRefresh });
 
         public async Task<bool> SetUsernameAndPassword(long accountId, string username, string password) =>
-            await PostRequestAsync<bool>(ApiConstants.AccountsV2.SetUsernameAndPassword, new object[] { accountId.ToString(), username, password });
+            await PostRequestAsync<bool>(ApiConstants.AccountsV2.SetUsernameAndPassword, new object[] { accountId, username, password });
 
         #endregion
 

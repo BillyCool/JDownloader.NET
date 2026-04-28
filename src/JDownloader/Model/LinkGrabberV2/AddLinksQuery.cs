@@ -20,6 +20,8 @@ namespace JDownloader.Model
 
         public string DownloadPassword { get; set; }
 
+        public string Comment { get; set; }
+
         public string ExtractPassword { get; set; }
 
         public string Links { get; set; }

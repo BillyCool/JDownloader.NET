@@ -1,4 +1,5 @@
 ﻿using JDownloader.Model;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -19,8 +20,8 @@ namespace JDownloader.Namespace
         public Task<bool> IsInstalled(string extensionId) =>
             PostRequestAsync<bool>(ApiConstants.Extensions.IsInstalled, new object[] { extensionId });
 
-        public Task<bool> List(ExtensionQuery query) =>
-            PostRequestAsync<bool>(ApiConstants.Extensions.List, new object[] { JsonSerializer.Serialize(query, JsonSerializerOptions) });
+        public Task<List<Extension>> List(ExtensionQuery query) =>
+            PostRequestAsync<List<Extension>>(ApiConstants.Extensions.List, new object[] { JsonSerializer.Serialize(query, JsonSerializerOptions) });
 
         public Task<bool> SetEnabled(string className, bool enabled) =>
             PostRequestAsync<bool>(ApiConstants.Extensions.SetEnabled, new object[] { className, enabled });

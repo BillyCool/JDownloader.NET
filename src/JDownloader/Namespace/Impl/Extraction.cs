@@ -17,14 +17,14 @@ namespace JDownloader.Namespace
         public Task<bool> CancelExtraction(long controllerId) =>
             PostRequestAsync<bool>(ApiConstants.Extraction.CancelExtraction, new object[] { controllerId });
 
-        public Task<ArchiveStatus> GetArchiveInfo(long[] linkIds, long[] packageIds) =>
-            PostRequestAsync<ArchiveStatus>(ApiConstants.Extraction.GetArchiveInfo, new object[] { linkIds, packageIds });
+        public Task<List<ArchiveStatus>> GetArchiveInfo(long[] linkIds, long[] packageIds) =>
+            PostRequestAsync<List<ArchiveStatus>>(ApiConstants.Extraction.GetArchiveInfo, new object[] { linkIds, packageIds });
 
-        public Task<ArchiveSettings> GetArchiveSettings(long[] archiveIds) =>
-            PostRequestAsync<ArchiveSettings>(ApiConstants.Extraction.GetArchiveSettings, new object[] { archiveIds });
+        public Task<List<ArchiveSettings>> GetArchiveSettings(string[] archiveIds) =>
+            PostRequestAsync<List<ArchiveSettings>>(ApiConstants.Extraction.GetArchiveSettings, new object[] { archiveIds });
 
-        public Task<ArchiveStatus> GetQueue() =>
-            PostRequestAsync<ArchiveStatus>(ApiConstants.Extraction.GetQueue);
+        public Task<List<ArchiveStatus>> GetQueue() =>
+            PostRequestAsync<List<ArchiveStatus>>(ApiConstants.Extraction.GetQueue);
 
         public Task<bool> SetArchiveSettings(string archiveId, ArchiveSettings archiveSettings) =>
             PostRequestAsync<bool>(ApiConstants.Extraction.SetArchiveSettings, new object[] { archiveId, JsonSerializer.Serialize(archiveSettings, JsonSerializerOptions) });

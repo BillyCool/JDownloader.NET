@@ -20,11 +20,11 @@ namespace JDownloader.Namespace
         public Task<List<string>> GetPluginRegex(string url) =>
             PostRequestAsync<List<string>>(ApiConstants.Plugins.GetPluginRegex, new object[] { url });
 
-        public Task<List<string>> List(PluginsQuery query) =>
-            PostRequestAsync<List<string>>(ApiConstants.Plugins.List, new object[] { JsonSerializer.Serialize(query, JsonSerializerOptions) });
+        public Task<List<Plugin>> List(PluginsQuery query) =>
+            PostRequestAsync<List<Plugin>>(ApiConstants.Plugins.List, new object[] { JsonSerializer.Serialize(query, JsonSerializerOptions) });
 
-        public Task<PluginConfigEntry> Query(AdvancedConfigQuery query) =>
-            PostRequestAsync<PluginConfigEntry>(ApiConstants.Plugins.Query, new object[] { JsonSerializer.Serialize(query, JsonSerializerOptions) });
+        public Task<List<PluginConfigEntry>> Query(AdvancedConfigQuery query) =>
+            PostRequestAsync<List<PluginConfigEntry>>(ApiConstants.Plugins.Query, new object[] { JsonSerializer.Serialize(query, JsonSerializerOptions) });
 
         public Task<bool> Reset(string interfaceName, string displayName, string key) =>
             PostRequestAsync<bool>(ApiConstants.Plugins.Reset, new object[] { interfaceName, displayName, key });

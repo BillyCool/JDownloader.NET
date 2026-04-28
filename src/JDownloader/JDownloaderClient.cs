@@ -55,6 +55,7 @@ namespace JDownloader
             Captcha = new Captcha(this);
             CaptchaForward = new CaptchaForward(this);
             Config = new Config(this);
+            ContentV2 = new ContentV2(this);
             Device = new Device(this);
             Dialogs = new Dialogs(this);
             DownloadController = new DownloadController(this);
@@ -89,6 +90,8 @@ namespace JDownloader
         public ICaptchaForward CaptchaForward { get; set; }
 
         public IConfig Config { get; set; }
+
+        public IContentV2 ContentV2 { get; set; }
 
         public IDevice Device { get; set; }
 

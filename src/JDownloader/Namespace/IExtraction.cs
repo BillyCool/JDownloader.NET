@@ -24,21 +24,21 @@ namespace JDownloader.Namespace
         /// </summary>
         /// <param name="linkIds">The IDs of the links.</param>
         /// <param name="packageIds">The IDs of the packages.</param>
-        /// <returns>The archive status.</returns>
-        Task<ArchiveStatus> GetArchiveInfo(long[] linkIds, long[] packageIds);
+        /// <returns>The archive statuses.</returns>
+        Task<List<ArchiveStatus>> GetArchiveInfo(long[] linkIds, long[] packageIds);
 
         /// <summary>
         /// Retrieves the archive settings for the specified archive IDs.
         /// </summary>
         /// <param name="archiveIds">The IDs of the archives.</param>
         /// <returns>The archive settings.</returns>
-        Task<ArchiveSettings> GetArchiveSettings(long[] archiveIds);
+        Task<List<ArchiveSettings>> GetArchiveSettings(string[] archiveIds);
 
         /// <summary>
         /// Retrieves the current extraction queue.
         /// </summary>
-        /// <returns>The archive status of the extraction queue.</returns>
-        Task<ArchiveStatus> GetQueue();
+        /// <returns>The archive statuses of the extraction queue.</returns>
+        Task<List<ArchiveStatus>> GetQueue();
 
         /// <summary>
         /// Sets the archive settings for a specific archive.

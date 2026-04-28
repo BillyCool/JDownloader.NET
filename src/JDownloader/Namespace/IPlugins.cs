@@ -33,14 +33,14 @@ namespace JDownloader.Namespace
         /// </summary>
         /// <param name="query">The query to filter the plugins.</param>
         /// <returns>A list of plugins.</returns>
-        Task<List<string>> List(PluginsQuery query);
+        Task<List<Plugin>> List(PluginsQuery query);
 
         /// <summary>
         /// Queries a plugin's advanced configuration based on the provided query.
         /// </summary>
         /// <param name="query">The query to retrieve the advanced configuration.</param>
-        /// <returns>The advanced configuration of the plugin.</returns>
-        Task<PluginConfigEntry> Query(AdvancedConfigQuery query);
+        /// <returns>The advanced configuration entries of the plugin.</returns>
+        Task<List<PluginConfigEntry>> Query(AdvancedConfigQuery query);
 
         /// <summary>
         /// Resets a plugin by its interface name, display name, and key.

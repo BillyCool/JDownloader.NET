@@ -1,4 +1,5 @@
 ﻿using JDownloader.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JDownloader.Namespace
@@ -30,8 +31,8 @@ namespace JDownloader.Namespace
         /// Lists the extensions based on the specified query.
         /// </summary>
         /// <param name="query">The query to filter the extensions.</param>
-        /// <returns>True if the extensions are listed successfully, otherwise false.</returns>
-        Task<bool> List(ExtensionQuery query);
+        /// <returns>The matching extensions.</returns>
+        Task<List<Extension>> List(ExtensionQuery query);
 
         /// <summary>
         /// Sets the enabled status of the extension with the specified class name.

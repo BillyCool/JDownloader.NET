@@ -63,8 +63,8 @@ namespace JDownloader.Namespace
         /// Checks if the children of a structure have changed.
         /// </summary>
         /// <param name="structureWatermark">The watermark of the structure.</param>
-        /// <returns>True if the children have changed, otherwise false.</returns>
-        Task<bool> GetChildrenChanged(long structureWatermark);
+        /// <returns>The current children change counter.</returns>
+        Task<long> GetChildrenChanged(long structureWatermark);
 
         /// <summary>
         /// Gets the selection base for the download folder history.

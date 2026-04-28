@@ -33,8 +33,8 @@ namespace JDownloader.Namespace
 
         public Task<bool> ClearList() => PostRequestAsync<bool>(ApiConstants.LinkGrabberV2.ClearList);
 
-        public Task<bool> GetChildrenChanged(long structureWatermark) =>
-            PostRequestAsync<bool>(ApiConstants.LinkGrabberV2.GetChildrenChanged, new object[] { structureWatermark });
+        public Task<long> GetChildrenChanged(long structureWatermark) =>
+            PostRequestAsync<long>(ApiConstants.LinkGrabberV2.GetChildrenChanged, new object[] { structureWatermark });
 
         public Task<List<string>> GetDownloadFolderHistorySelectionBase() =>
             PostRequestAsync<List<string>>(ApiConstants.LinkGrabberV2.GetDownloadFolderHistorySelectionBase);

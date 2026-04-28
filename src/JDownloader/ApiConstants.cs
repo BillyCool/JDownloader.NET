@@ -57,6 +57,14 @@ namespace JDownloader
             public const string Set = "set";
         }
 
+        public static class ContentV2
+        {
+            public const string GetFavIcon = "getFavIcon";
+            public const string GetFileIcon = "getFileIcon";
+            public const string GetIcon = "getIcon";
+            public const string GetIconDescription = "getIconDescription";
+        }
+
         public static class Device
         {
             public const string GetDirectConnectionInfos = "getDirectConnectionInfos";
@@ -95,7 +103,7 @@ namespace JDownloader
             public const string GetDownloadUrls = "getDownloadUrls";
             public const string GetStopMark = "getStopMark";
             public const string GetStopMarkedLink = "getStopMarkedLink";
-            public const string GetStructureChangeCounter = "getstatic classureChangeCounter";
+            public const string GetStructureChangeCounter = "getStructureChangeCounter";
             public const string MoveLinks = "moveLinks";
             public const string MovePackages = "movePackages";
             public const string MoveToNewPackage = "movetoNewPackage";

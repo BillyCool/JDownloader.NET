@@ -91,6 +91,6 @@ namespace JDownloader.Namespace
             PostRequestAsync(ApiConstants.DownloadsV2.StartOnlineStatusCheck, new object[] { linkIds, packageIds });
 
         public Task Unskip(long[] packageIds, long[] linkIds, Reason filterByReason) =>
-            PostRequestAsync(ApiConstants.DownloadsV2.Unskip, new object[] { linkIds, packageIds, filterByReason.ToString() });
+            PostRequestAsync(ApiConstants.DownloadsV2.Unskip, new object[] { packageIds, linkIds, filterByReason.ToString() });
     }
 }
